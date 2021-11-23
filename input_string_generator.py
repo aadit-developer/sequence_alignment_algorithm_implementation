@@ -29,3 +29,6 @@ def getInputString(file_path):
         str2 = beginning_substring + str2 + ending_substring
 
     return[str1,str2]
+
+if __name__ == '__main__':
+    print(getInputString('penalties.txt'))
