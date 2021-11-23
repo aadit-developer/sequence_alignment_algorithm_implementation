@@ -17,6 +17,8 @@ def getInputString(file_path):
             str2 = items[i]
 
     str2_elements = elements
+    original_str1 = str1
+    original_str2 = str2
 
     for i in str1_elements:
         beginning_substring = str1[:i+1]
@@ -28,7 +30,9 @@ def getInputString(file_path):
         ending_substring = str2[i+1:]
         str2 = beginning_substring + str2 + ending_substring
 
-    return[str1,str2]
+    if pow(2,len(str1_elements))*len(original_str1) == len(str1) and pow(2,len(str2_elements))*len(original_str2) == len(str2):
+        return[str1,str2]
+    else:
+        return "String Constraint Does not match"
 
-if __name__ == '__main__':
-    print(getInputString('penalties.txt'))
+print(getInputString("sample_input.txt"))
