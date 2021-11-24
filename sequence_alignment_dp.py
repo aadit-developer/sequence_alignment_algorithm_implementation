@@ -79,6 +79,7 @@ def getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty):
         res_s1 = ('_' * col) + res_s1
     # print(res_s1[:50], res_s2[:50])
     # print(res_s1[-50:], res_s2[-50:])
+
     print(res_s1)
     print(res_s2)
 
