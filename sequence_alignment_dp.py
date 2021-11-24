@@ -1,5 +1,5 @@
 s1 = 'ACACACTGACTACTGACTGGTGACTACTGACTGGACTGACTACTGACTGGTGACTACTGACTGG'
-s2 = 'ACA'
+s2 = 'TATTATTATACGCTATTATACGCGACGCGGACGCGTATACGCTATTATACGCGACGCGGACGCG'
 # s1 = 'ATGGCCTC'
 # s2 = 'ACGGCTC'
 # s1 = 'AGGGCT'
@@ -21,9 +21,9 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
 
     A = [[0 for i in range(length_s2 + 1)] for j in range(length_s1 + 1)]  #initializing the optimal value matrix
 
-    for i in range(length_s1):              #initializing the first row and column with gap penalties
+    for i in range(length_s1 + 1):              #initializing the first row and column with gap penalties
         A[i][0] = i * gap_penalty
-    for i in range(length_s2):
+    for i in range(length_s2 + 1):
         A[0][i] = i * gap_penalty
 
     for j in range(1,length_s2+1):          #parsing over both the strings in order to find minimalize the penalty
@@ -33,6 +33,7 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
                               gap_penalty + A[i-1][j], gap_penalty + A[i][j-1])
             else:
                 A[i][j] = A[i-1][j-1]
+
     getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty)
     print(A[-1][-1])
 
@@ -77,10 +78,8 @@ def getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty):
     if col != 1:
         res_s2 = s2[:col] + res_s2
         res_s1 = ('_' * col) + res_s1
-    # print(res_s1[:50], res_s2[:50])
-    # print(res_s1[-50:], res_s2[-50:])
+    print(res_s1[:50], res_s2[:50])
+    print(res_s1[-50:], res_s2[-50:])
 
-    print(res_s1)
-    print(res_s2)
 
 seq_align(s1, s2, gap_penalty, mismatch_penalty)
