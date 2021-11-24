@@ -37,7 +37,6 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
     getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty)
     print(A[-1][-1])
 
-
 def getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty):
     row = len(A) - 1
     col = len(A[0]) - 1
