@@ -1,8 +1,6 @@
-import calcMemoryTime
-
 s1 = 'ACACACTGACTACTGACTGGTGACTACTGACTGGACTGACTACTGACTGGTGACTACTGACTGG'
-s2 = 'TATTATTATACGCTATTATACGCGACGCGGACGCGTATACGCTATTATACGCGACGCGGACGCG'
-
+# s2 = 'TATTATTATACGCTATTATACGCGACGCGGACGCGTATACGCTATTATACGCGACGCGGACGCG'
+s2 = 'ACT'
 mismatch_penalty = [[0, 110, 48, 94], [110, 0, 118, 48], [48, 118, 0, 110], [94, 48, 110, 0]]
 gap_penalty = 30
 
@@ -10,14 +8,13 @@ gap_penalty = 30
 def seq_align(s1, s2, gap_penalty, mismatch_penalty):
     m = len(s1)
     n = len(s2)
-    max_len = max(m, n)
 
     A = [[0 for i in range(n + 1)] for j in range(m + 1)]  # initializing the optimal value matrix
 
-    for i in range(m):  # initializing the first row and column with gap penalties
+    for i in range(m + 1):  # initializing the first row and column with gap penalties
         A[i][0] = i * gap_penalty
 
-    for i in range(n):
+    for i in range(n + 1):
         A[0][i] = i * gap_penalty
 
     mismatch_dict = {'A': 0, 'C': 1, 'G': 2, 'T': 3}  # mapping characters to numbers in order to access their respective mismatch
@@ -30,14 +27,14 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
                               gap_penalty + A[i - 1][j], gap_penalty + A[i][j - 1])
             else:
                 A[i][j] = A[i - 1][j - 1]
-
+    print(A)
     i = m - 1
     j = n - 1
 
     x_final = []
     y_final = []
 
-    while not (i == 0 or j == 0):
+    while not (i == 1 or j == 1):
         if s1[i - 1] == s2[j - 1]:
             x_final.append(s1[i - 1])
             y_final.append(s2[j - 1])
@@ -63,6 +60,13 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
     x_final = ''.join(x_final[::-1])
     y_final = ''.join(y_final[::-1])
 
+    print(i, j)
+    if i != 0:
+        x_final = s1[:i] + x_final
+        y_final = '_'*i + y_final
+    if j != 0:
+        x_final = '_'*j + x_final
+        y_final = s2[:j] + y_final
     # x_string = ''.join(x_final)
     # y_string = ''.join(y_final)
 
@@ -71,9 +75,8 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
     #
     # print(y_final[:50])
     # print(y_final[-50:])
-    print(x_final)
-    print(y_final)
+    return x_final, y_final
 
-seq_align( s1, s2, gap_penalty, mismatch_penalty)
-# if __name__ == '__main__':
-#     print(calcMemoryTime.run(seq_align, s1, s2, gap_penalty, mismatch_penalty))
+print(seq_align( s1, s2, gap_penalty, mismatch_penalty))
+# # if __name__ == '__main__':
+# #     print(calcMemoryTime.run(seq_align, s1, s2, gap_penalty, mismatch_penalty))

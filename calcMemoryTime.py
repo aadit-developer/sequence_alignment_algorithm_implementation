@@ -20,4 +20,4 @@ def run(func, *args):
 #
 
 # if __name__ == '__main__':
-#     print(run(x, 5,4,3))
+print(run(print, 5,4,3))
