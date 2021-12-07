@@ -1,8 +1,9 @@
 import sequence_alignment_dp
-
-s1 = 'ACACACTGACTACTGACTGGTGACTACTGACTGGACTGACTACTGACTGGTGACTACTGACTGG'
-s2 = 'TATTATTATACGCTATTATACGCGACGCGGACGCGTATACGCTATTATACGCGACGCGGACGCG'
-
+import math
+s2 = 'ACACACTGACTACTGACTGGTGACTACTGACTGGACTGACTACTGACTGGTGACTACTGACTGG'
+s1 = 'TATTATTATACGCTATTATACGCGACGCGGACGCGTATACGCTATTATACGCGACGCGGACGCG'
+# s1 = 'AGGGCT'
+# s2 = 'AGGCA'
 mismatch_penalty = [[0, 110, 48, 94], [110, 0, 118, 48], [48, 118, 0, 110], [94, 48, 110, 0]]
 mismatch_dict = {'A': 0, 'C': 1, 'G': 2,
                  'T': 3}  # mapping characters to numbers in order to access their respective mismatch
@@ -33,22 +34,28 @@ def getAlignment(s1, s2):
 
     return A[1]
 
-def divideAndConquerAlignment(s1, s2, res_s1 = '', res_s2 = ''):
+
+def divideAndConquerAlignment(s1, s2):
     m = len(s1)
     n = len(s2)
 
     if m<=2 or n<=2:
-        print(s1, s2)
-        print(sequence_alignment_dp.seq_align(s1, s2, gap_penalty, mismatch_penalty))
+        # print(s1, s2)
+        # print(sequence_alignment_dp.seq_align(s1, s2, gap_penalty, mismatch_penalty))
         return sequence_alignment_dp.seq_align(s1, s2, gap_penalty, mismatch_penalty)
 
-    mid = m//2
-    q1 = [0] + getAlignment(s1[:m], s2)
-    q2 = getAlignment(s1[m:][::-1], s2[::-1])[::-1] + [0]
+    mid = math.ceil(m/2)
+    q1 = getAlignment(s1[:mid], s2)
+    # print(q1)
+    q2 = getAlignment(s1[mid:][::-1], s2[::-1])[::-1]
+    # print(q2)
     q = [q1[i]+q2[i] for i in range(n+1)]
-    q_index = q.index(max(q)) - 1
-    divideAndConquerAlignment(s1[:mid], s2[:q_index], res_s1, res_s2)
-    divideAndConquerAlignment(s1[mid:], s2[q_index:], res_s1, res_s2)
-    return res_s1, res_s2
+    print(q)
+    q_index = q.index(min(q))
+    print(s1[:mid], s2[:q_index])
+    print(s1[mid:], s2[q_index:])
+    res_left = divideAndConquerAlignment(s1[:mid], s2[:q_index])
+    res_right = divideAndConquerAlignment(s1[mid:], s2[q_index:])
+    return res_left[0]+res_right[0], res_left[1]+res_right[1]
 
-divideAndConquerAlignment(s1,s2)
+print(divideAndConquerAlignment(s1,s2))

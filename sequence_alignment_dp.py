@@ -33,9 +33,9 @@ def seq_align(s1, s2, gap_penalty, mismatch_penalty):
                               gap_penalty + A[i-1][j], gap_penalty + A[i][j-1])
             else:
                 A[i][j] = A[i-1][j-1]
-
-    getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty)
     print(A[-1][-1])
+    return getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty)
+    # print(A[-1][-1])
 
 def getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty):
     row = len(A) - 1
@@ -70,15 +70,15 @@ def getBackTraceHelper(A, s1, s2, gap_penalty, mismatch_penalty):
             res_s1 = row_char + res_s1
             row -= 1
 
-    if row != 1:
+    if row > 0:
         res_s1 = s1[:row] + res_s1
         res_s2 = ('_' * row) + res_s2
 
-    if col != 1:
+    if col > 0:
         res_s2 = s2[:col] + res_s2
         res_s1 = ('_' * col) + res_s1
-    print(res_s1[:50], res_s2[:50])
-    print(res_s1[-50:], res_s2[-50:])
+    # print(res_s1[:50], res_s2[:50])
+    # print(res_s1[-50:], res_s2[-50:])
+    return res_s1, res_s2
 
-
-seq_align(s1, s2, gap_penalty, mismatch_penalty)
+print(seq_align("TATTATTATACGCTATTATACGCGACGCGGA", "ACACACTGACTACTGACTGGTGA", gap_penalty, mismatch_penalty))
