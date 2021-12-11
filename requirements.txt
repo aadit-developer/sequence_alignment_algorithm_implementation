@@ -1,0 +1,1 @@
+pytracemalloc==0.9.1
