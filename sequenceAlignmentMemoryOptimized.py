@@ -1,3 +1,5 @@
+import math
+
 import sequenceAlignmentBasic
 
 mismatch_penalty = [[0, 110, 48, 94], [110, 0, 118, 48], [48, 118, 0, 110], [94, 48, 110, 0]]
@@ -41,13 +43,21 @@ def divide_and_conquer_alignment(s1, s2):
     mid = m // 2
     q1 = get_alignment(s1[:mid], s2)
     q2 = get_alignment(s1[mid:][::-1], s2[::-1])[::-1]
-    q = [q1[i] + q2[i] for i in range(n + 1)]
-    q_index = q.index(min(q))
-    res_left = divide_and_conquer_alignment(s1[:mid], s2[:q_index])
-    res_right = divide_and_conquer_alignment(s1[mid:], s2[q_index:])
-    return res_left[0] + res_right[0], res_left[1] + res_right[1]
+    min_num = math.inf
+    q_index = -1
+    for i in range(n):
+        if min_num >= q1[i] + q2[i]:
+            min_num = q1[i] + q2[i]
+            q_index = i
+    res_left, cost1 = divide_and_conquer_alignment(s1[:mid], s2[:q_index])
+    res_right, cost2 = divide_and_conquer_alignment(s1[mid:], s2[q_index:])
+    cost = cost1 + cost2
+    return (res_left[0] + res_right[0], res_left[1] + res_right[1]), cost
 
 
 def run(s1, s2):
-    res_s1, res_s2 = divide_and_conquer_alignment(s1, s2)
-    return res_s1[:50], res_s1[-50:], res_s2[:50], res_s2[-50:]
+    (res_s1, res_s2), cost = divide_and_conquer_alignment(s1, s2)
+    # cost = get_alignment(s1, s2)[-1]
+    return res_s1[:50], res_s1[-50:], res_s2[:50], res_s2[-50:], str(cost)
+
+# print(run('AGT', 'ACT'))

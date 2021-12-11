@@ -7,7 +7,7 @@ def seq_align(s1, s2):
     length_s1 = len(s1)
     length_s2 = len(s2)
 
-    A = [[0 for i in range(length_s2 + 1)] for j in range(length_s1 + 1)]  # initializing the optimal value matrix
+    A = [[0]*(length_s2 + 1) for _ in range(length_s1 + 1)]  # initializing the optimal value matrix
 
     for i in range(length_s1 + 1):  # initializing the first row and column with gap penalties
         A[i][0] = i * gap_penalty
@@ -21,7 +21,8 @@ def seq_align(s1, s2):
                               gap_penalty + A[i - 1][j], gap_penalty + A[i][j - 1])
             else:
                 A[i][j] = A[i - 1][j - 1]
-    return get_back_trace(A, s1, s2)
+
+    return get_back_trace(A, s1, s2), A[-1][-1]
 
 
 def get_back_trace(A, s1, s2):
@@ -31,28 +32,25 @@ def get_back_trace(A, s1, s2):
     res_s2 = ''
 
     while row >= 1 and col >= 1:
-        pen_mismatch = A[row][col] - A[row - 1][col - 1]
-        pen_gap_s1 = A[row][col] - A[row][col - 1]
-        pen_gap_s2 = A[row][col] - A[row - 1][col]
         row_char = s1[row - 1]
         col_char = s2[col - 1]
 
-        if pen_mismatch == mismatch_penalty[mismatch_dict[row_char]][mismatch_dict[col_char]]:
+        if A[row][col] - A[row - 1][col - 1] == mismatch_penalty[mismatch_dict[row_char]][mismatch_dict[col_char]]:
             res_s1 = row_char + res_s1
             res_s2 = col_char + res_s2
             row -= 1
             col -= 1
 
-        elif pen_gap_s1 == gap_penalty:
+        elif A[row][col] - A[row][col - 1] == gap_penalty:
             res_s1 = '_' + res_s1
             res_s2 = col_char + res_s2
             col -= 1
 
-        elif pen_gap_s2 == gap_penalty:
+        elif A[row][col] - A[row - 1][col] == gap_penalty:
             res_s2 = '_' + res_s2
             res_s1 = row_char + res_s1
             row -= 1
-
+    del A
     if row > 0:
         res_s1 = s1[:row] + res_s1
         res_s2 = ('_' * row) + res_s2
@@ -64,5 +62,7 @@ def get_back_trace(A, s1, s2):
 
 
 def run(s1, s2):
-    res_s1, res_s2 = seq_align(s1, s2)
-    return res_s1[:50], res_s1[-50:], res_s2[:50], res_s2[-50:]
+    (res_s1, res_s2), cost = seq_align(s1, s2)
+    return res_s1[:50], res_s1[-50:], res_s2[:50], res_s2[-50:], str(cost)
+
+# print(run('AGT', 'ACT'))

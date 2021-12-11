@@ -1,5 +1,5 @@
 def get_input_string(file_path):
-    with open(file_path,"r") as file:
+    with open(file_path, "r") as file:
         items = file.read().splitlines()
 
     str1 = items[0]
